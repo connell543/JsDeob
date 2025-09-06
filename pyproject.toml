@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jsdeob"
+version = "0.1.0"
+description = "Universal JavaScript deobfuscator for malware research"
+readme = "README.md"
+authors = [
+    { name = "connell", email = "connell543@outlook.com" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.7"
+dependencies = []
+
+[project.scripts]
+jsdeob = "jsdeob.cli:main"
