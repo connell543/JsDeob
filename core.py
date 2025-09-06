@@ -16,9 +16,8 @@ try:
 except ImportError:
     yara = None
 
-# ----------------------------
 # Utilities
-# ----------------------------
+
 
 def compute_hash(text: str) -> str:
     """Compute SHA256 hash of a string."""
@@ -138,7 +137,6 @@ def extract_iocs(code: str, arrays: dict, decoders: dict) -> dict:
         'suspicious_functions': []
     }
 
-    # Function context descriptions
     func_contexts = {
         'eval': 'Dynamic code execution',
         'Function': 'Dynamic function constructor',
@@ -147,7 +145,6 @@ def extract_iocs(code: str, arrays: dict, decoders: dict) -> dict:
         'Object.defineProperty': 'Property definition, potential object manipulation'
     }
 
-    # Suspicious functions with details
     suspicious_funcs = list(func_contexts.keys())
     lines = code.splitlines()
     for func in suspicious_funcs:
@@ -209,9 +206,9 @@ def beautify_js(output_file: str):
     except Exception:
         print("⚠️ Skipping beautify (install with `npm install -g js-beautify`).")
 
-# ----------------------------
+
 # Main deobfuscator
-# ----------------------------
+
 
 def deobfuscate(
     files,
