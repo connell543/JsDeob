@@ -19,20 +19,12 @@ from bs4 import BeautifulSoup
 import socket
 
 
-# ----------------------------
-# ANSI color codes (disabled)
-# ----------------------------
-
 class Colors:
     INFO = ''
     SUCCESS = ''
     WARN = ''
     ERROR = ''
     RESET = ''
-
-# ----------------------------
-# ASCII Banner
-# ----------------------------
 
 BANNER = r"""
 ___________________________¶___¶___________________________
@@ -73,9 +65,7 @@ ___________________________________________________________
        Copyright 2024
 """
 
-# ----------------------------
 # Spinner for long operations
-# ----------------------------
 
 class Spinner:
     busy = False
@@ -111,9 +101,7 @@ class Spinner:
         sys.stdout.write("\r")
         sys.stdout.flush()
 
-# ----------------------------
 # File collection
-# ----------------------------
 
 def collect_files(input_path: Path) -> list:
     """Collect JS and HTML files from folder or single file."""
@@ -127,9 +115,8 @@ def collect_files(input_path: Path) -> list:
         )
     return temp_files
 
-# ----------------------------
+
 # URL crawling
-# ----------------------------
 
 def check_domain_resolution(domain: str) -> bool:
     """Check if a domain can be resolved."""
@@ -145,7 +132,6 @@ def crawl_url(url: str, input_base_path: Path, session: PromptSession, max_depth
         visited = set()
     
     files = []
-    # Normalize URL
     if not url.startswith(('http://', 'https://')):
         url = 'http://' + url
     
@@ -174,7 +160,7 @@ def crawl_url(url: str, input_base_path: Path, session: PromptSession, max_depth
             target_path = input_base_path / domain_name / (path + file_ext)
             target_path.parent.mkdir(parents=True, exist_ok=True)
             
-            # Prompt user to download this file
+            
             response = session.prompt(f"Download {try_url} to {target_path}? (y/n): ", default="y").strip().lower()
             if response == 'y':
                 target_path.write_text(r.text, encoding="utf-8", errors="replace")
@@ -199,24 +185,21 @@ def crawl_url(url: str, input_base_path: Path, session: PromptSession, max_depth
                         if urlparse(abs_url).netloc == urlparse(try_url).netloc and abs_url not in visited:
                             downloadable_links.append(abs_url)
                 
-                # Prompt user for each downloadable link
                 for link_url in downloadable_links:
                     response = session.prompt(f"Download {link_url}? (y/n): ", default="y").strip().lower()
                     if response == 'y':
                         files.extend(crawl_url(link_url, input_base_path, session, max_depth - 1, visited))
             
-            return files  # Exit after successful scheme
+            return files 
         except Exception as e:
             print(f"Failed to fetch {try_url}: {e}")
-            if scheme == schemes[-1]:  # Last scheme failed
+            if scheme == schemes[-1]: 
                 print(f"⚠️ Could not fetch {url} with either scheme. Try a different URL or check your connection.")
                 return files
     
     return files
 
-# ----------------------------
 # Summary collector
-# ----------------------------
 
 summary_data = []
 
@@ -248,9 +231,7 @@ def deobfuscate_with_summary(*args, **kwargs):
     finally:
         builtins.print = original_print
 
-# ----------------------------
 # CLI Entry
-# ----------------------------
 
 def create_parser():
     parser = argparse.ArgumentParser(
